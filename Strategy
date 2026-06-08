@@ -1,0 +1,20 @@
+// Strategy
+interface IPaymentStrategy {
+    pagar(info: any): Promise<boolean>;
+}
+class TarjetaCredito implements IPaymentStrategy {
+    async pagar(info) { /* proceso tarjeta */ return true; }
+}
+class PayPal implements IPaymentStrategy {
+    async pagar(info) { /* proceso PayPal */ return true; }
+}
+class PaymentContext {
+    private estrategia: IPaymentStrategy;
+    constructor(estrat: IPaymentStrategy) { this.estrategia = estrat; }
+    cambiarEstrategia(estrat: IPaymentStrategy) { this.estrategia = estrat; }
+    procesarPago(info) { return this.estrategia.pagar(info); }
+}
+let pago = new PaymentContext(new TarjetaCredito());
+pago.procesarPago(datosCliente);
+pago.cambiarEstrategia(new PayPal());
+pago.procesarPago(datosCliente);
