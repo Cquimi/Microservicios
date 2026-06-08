@@ -1,0 +1,23 @@
+// Observer
+public interface Notificador {
+    void actualizar(Reserva reserva);
+}
+public class EmailNotifier implements Notificador {
+    public void actualizar(Reserva reserva) {
+    }
+}
+public class SmsNotifier implements Notificador {
+    public void actualizar(Reserva reserva) {
+    }
+}
+public class BookingService {
+    private List<Notificador> notifiers = new ArrayList<>();
+    public void suscribir(Notificador n) { notifiers.add(n); }
+    public Reserva crearReserva(Reserva r) {
+        notifiers.forEach(n -> n.actualizar(r));  // notifica a todos
+        return r;
+    }
+}
+BookingService bService = new BookingService();
+bService.suscribir(new EmailNotifier());
+bService.suscribir(new SmsNotifier());
