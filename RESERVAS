@@ -1,0 +1,26 @@
+// State
+interface EstadoReserva {
+    cancelar(res: ReservaContext): void;
+    confirmar(res: ReservaContext): void;
+}
+class Pendiente implements EstadoReserva {
+    cancelar(res: ReservaContext) { res.estado = new Cancelada(); }
+    confirmar(res: ReservaContext) { res.estado = new Confirmada(); }
+}
+class Confirmada implements EstadoReserva {
+    cancelar(res: ReservaContext) { res.estado = new Cancelada(); }
+    confirmar(res: ReservaContext) { /* ya confirmada: no hace nada */ }
+}
+class Cancelada implements EstadoReserva {
+    cancelar(res: ReservaContext) { /* ya cancelada */ }
+    confirmar(res: ReservaContext) { /* no puede confirmar */ }
+}
+class ReservaContext {
+    estado: EstadoReserva;
+    constructor() { this.estado = new Pendiente(); }
+    confirmar()  { this.estado.confirmar(this); }
+    cancelar()   { this.estado.cancelar(this); }
+}
+let reserva = new ReservaContext();
+reserva.confirmar();  // cambia a estado Confirmada
+reserva.cancelar();   // cambia a Cancelada
